@@ -30,7 +30,7 @@ class voice_cmd_vel:
             r.sleep()
         
     def speechCb(self, msg):
-        rospy.loginfo(msg.data)
+        rospy.loginfo('Voice command received message: {}'.format(msg.data))
 
         if msg.data.find("full speed") > -1:
             if self.speed == 0.2:
