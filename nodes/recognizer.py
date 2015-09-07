@@ -6,8 +6,10 @@ recognizer.py is a wrapper for pocketsphinx.
     ~lm - filename of language model
     ~dict - filename of dictionary
     ~mic_name - set the pulsesrc device name for the microphone input.
-                e.g. a Logitech G35 Headset has the following device name: alsa_input.usb-Logitech_Logitech_G35_Headset-00-Headset_1.analog-mono
-                To list audio device info on your machine, in a terminal type: pacmd list-sources
+           e.g. a Logitech G35 Headset has the following device name:
+           alsa_input.usb-Logitech_Logitech_G35_Headset-00-Headset_1.analog-mono
+           To list audio device info on your machine, in a terminal type:
+           pacmd list-sources
   publications:
     ~output (std_msgs/String) - text output
   services:
@@ -29,7 +31,7 @@ gobject.threads_init()
 import gst
 
 from std_msgs.msg import String
-from std_srvs.srv import *
+from std_srvs.srv import Empty, EmptyResponse
 from audio_common_msgs.msg import AudioData
 
 import commands
@@ -47,6 +49,10 @@ class recognizer(object):
         self._lm_param = "~lm"
         self._dic_param = "~dict"
         self._audio_topic_param = "~audio_msg_topic"
+
+        self.asr = None
+        self.bus = None
+        self.bus_id = None
 
         # Audio ROS topic, if this is set the recognizer will subscribe to
         # AudioData messages on this topic.
@@ -68,7 +74,8 @@ class recognizer(object):
             # mp3-formatted messages.
             self.launch_config = 'appsrc name=appsrc ! mad'
             self._ros_audio_topic = rospy.get_param(self._audio_topic_param)
-            rospy.loginfo('Using ROS audio messages as input')
+            rospy.loginfo('Using ROS audio messages as input. Topic: {}'.
+                          format(self._ros_audio_topic))
         else:
             self.launch_config = 'gconfaudiosrc'
 
@@ -81,14 +88,15 @@ class recognizer(object):
         # Configure ROS settings
         self.started = False
         rospy.on_shutdown(self.shutdown)
-        self.pub = rospy.Publisher('~output', String)
+        self.pub = rospy.Publisher('~output', String, queue_size=10)
         rospy.Service("~start", Empty, self.start)
         rospy.Service("~stop", Empty, self.stop)
 
         if rospy.has_param(self._lm_param) and rospy.has_param(self._dic_param):
             self.start_recognizer()
         else:
-            rospy.logwarn("lm and dic parameters need to be set to start recognizer.")
+            rospy.logwarn("lm and dic parameters need to be "
+                          "set to start recognizer.")
 
     def start_recognizer(self):
         rospy.loginfo('Starting recognizer... pipeline: {}'.format(
@@ -109,6 +117,8 @@ class recognizer(object):
         # Also make sure the appsource element was created properly.
         if self._ros_audio_topic:
             self._app_source = self.pipeline.get_by_name('appsrc')
+            rospy.loginfo('Subscribing to AudioData on topic: {}'.format(
+                self._ros_audio_topic))
             rospy.Subscriber(
                 self._ros_audio_topic, AudioData, self.on_audio_message)
             if not self._app_source:
@@ -119,7 +129,8 @@ class recognizer(object):
         if rospy.has_param(self._lm_param):
             lm = rospy.get_param(self._lm_param)
         else:
-            rospy.logerr('Recognizer not started. Please specify a language model file.')
+            rospy.logerr('Recognizer not started. Please specify a '
+                         'language model file.')
             return
 
         if rospy.has_param(self._dic_param):
@@ -133,19 +144,23 @@ class recognizer(object):
 
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
-        self.bus_id = self.bus.connect('message::application', self.application_message)
+        self.bus_id = self.bus.connect('message::application',
+                                       self.application_message)
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.started = True
 
         rospy.loginfo('Recognizer started!')
 
     def pulse_index_from_name(self, name):
-        output = commands.getstatusoutput("pacmd list-sources | grep -B 1 'name: <" + name + ">' | grep -o -P '(?<=index: )[0-9]*'")
+        output = commands.getstatusoutput(
+            ("pacmd list-sources | grep -B 1 'name: <" + name +
+             ">' | grep -o -P '(?<=index: )[0-9]*'"))
 
         if len(output) == 2:
             return output[1]
         else:
-            raise Exception("Error. pulse index doesn't exist for name: " + name)
+            raise Exception("Error. pulse index doesn't exist for name: {}".
+                            format(name))
 
     def stop_recognizer(self):
         if self.started:
