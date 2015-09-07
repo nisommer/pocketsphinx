@@ -19,6 +19,7 @@ recognizer.py is a wrapper for pocketsphinx.
 
 import roslib; roslib.load_manifest('pocketsphinx')
 import rospy
+import os
 
 import pygtk
 pygtk.require('2.0')
@@ -128,6 +129,10 @@ class recognizer(object):
         # Configure language model
         if rospy.has_param(self._lm_param):
             lm = rospy.get_param(self._lm_param)
+            if not os.path.isfile(lm):
+                rospy.logerr(
+                    'Language model file does not exist: {}'.format(lm))
+                return
         else:
             rospy.logerr('Recognizer not started. Please specify a '
                          'language model file.')
@@ -135,6 +140,10 @@ class recognizer(object):
 
         if rospy.has_param(self._dic_param):
             dic = rospy.get_param(self._dic_param)
+            if not os.path.isfile(dic):
+                rospy.logerr(
+                    'Dictionary file does not exist: {}'.format(dic))
+                return
         else:
             rospy.logerr('Recognizer not started. Please specify a dictionary.')
             return
@@ -171,7 +180,8 @@ class recognizer(object):
 
     def shutdown(self):
         """ Delete any remaining parameters so they don't affect next launch """
-        for param in [self._device_name_param, self._lm_param, self._dic_param]:
+        for param in [self._device_name_param, self._lm_param, self._dic_param,
+                      self._audio_topic_param]:
             if rospy.has_param(param):
                 rospy.delete_param(param)
 
@@ -235,4 +245,3 @@ class recognizer(object):
 if __name__ == "__main__":
     start = recognizer()
     gtk.main()
-
