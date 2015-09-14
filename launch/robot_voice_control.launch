@@ -23,6 +23,7 @@
     <param name="lm" value="$(find pocketsphinx)/language_models/manipulator_command.lm" />
     <param name="dict" value="$(find pocketsphinx)/language_models/manipulator_command.dict" />
     <param name="audio_msg_topic" value="/audio" />
+    <remap from="~output" to="nl_command_parsed"/>
   </node>
 
 </launch>
