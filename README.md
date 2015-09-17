@@ -2,7 +2,8 @@ A simple ROS wrapper for using Pocketsphinx (via gstreamer) with ROS. See docs h
 
 If installing from source you will need to install the following:
 ```
-sudo apt-get install gstreamer0.10-pocketsphinx
+sudo apt-get install gstreamer0.10-pocketsphinx pocketsphinx-lm-en-hub4 pocketsphinx-utils pocketsphinx-hmm-en-hub4wsj ros-indigo-audio-common
+
 ```
 
 
