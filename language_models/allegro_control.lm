@@ -1,0 +1,83 @@
+Language model created by QuickLM on Mon Oct 12 13:06:41 EDT 2015
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 10 sentences and 16 words
+
+\data\
+ngram 1=16
+ngram 2=24
+ngram 3=20
+
+\1-grams:
+-0.9138 </s> -0.3010
+-0.9138 <s> -0.2445
+-1.6128 COMPENSATION -0.2903
+-1.9138 FIVE -0.2445
+-1.9138 FOUR -0.2445
+-1.1357 GRASP -0.2680
+-1.6128 GRAVITY -0.2903
+-1.9138 OFF -0.2445
+-1.9138 ON -0.2445
+-1.9138 ONE -0.2445
+-1.9138 OPEN -0.2445
+-1.9138 RESET -0.2957
+-1.9138 SENSORS -0.2445
+-1.9138 THREE -0.2445
+-1.9138 TWO -0.2445
+-1.9138 ZERO -0.2445
+
+\2-grams:
+-0.5229 <s> GRASP 0.0000
+-1.0000 <s> GRAVITY 0.0000
+-1.3010 <s> OPEN 0.0000
+-1.3010 <s> RESET 0.0000
+-0.6021 COMPENSATION OFF 0.0000
+-0.6021 COMPENSATION ON 0.0000
+-0.3010 FIVE </s> -0.3010
+-0.3010 FOUR </s> -0.3010
+-1.0792 GRASP FIVE 0.0000
+-1.0792 GRASP FOUR 0.0000
+-1.0792 GRASP ONE 0.0000
+-1.0792 GRASP THREE 0.0000
+-1.0792 GRASP TWO 0.0000
+-1.0792 GRASP ZERO 0.0000
+-0.3010 GRAVITY COMPENSATION 0.0000
+-0.3010 OFF </s> -0.3010
+-0.3010 ON </s> -0.3010
+-0.3010 ONE </s> -0.3010
+-0.3010 OPEN </s> -0.3010
+-0.3010 RESET SENSORS 0.0000
+-0.3010 SENSORS </s> -0.3010
+-0.3010 THREE </s> -0.3010
+-0.3010 TWO </s> -0.3010
+-0.3010 ZERO </s> -0.3010
+
+\3-grams:
+-1.0792 <s> GRASP FIVE
+-1.0792 <s> GRASP FOUR
+-1.0792 <s> GRASP ONE
+-1.0792 <s> GRASP THREE
+-1.0792 <s> GRASP TWO
+-1.0792 <s> GRASP ZERO
+-0.3010 <s> GRAVITY COMPENSATION
+-0.3010 <s> OPEN </s>
+-0.3010 <s> RESET SENSORS
+-0.3010 COMPENSATION OFF </s>
+-0.3010 COMPENSATION ON </s>
+-0.3010 GRASP FIVE </s>
+-0.3010 GRASP FOUR </s>
+-0.3010 GRASP ONE </s>
+-0.3010 GRASP THREE </s>
+-0.3010 GRASP TWO </s>
+-0.3010 GRASP ZERO </s>
+-0.6021 GRAVITY COMPENSATION OFF
+-0.6021 GRAVITY COMPENSATION ON
+-0.3010 RESET SENSORS </s>
+
+\end\
