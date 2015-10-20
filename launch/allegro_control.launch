@@ -21,7 +21,7 @@
   <!-- subscribe to /audio ROS messages -->
   <node name="recognizer" pkg="pocketsphinx" type="recognizer.py" output="screen">
     <param name="lm" value="$(find pocketsphinx)/language_models/allegro_control.lm" />
-    <param name="dict" value="$(find pocketsphinx)/language_models/allegro_control.dict" />
+    <param name="dict" value="$(find pocketsphinx)/language_models/allegro_control.dic" />
     <param name="audio_msg_topic" value="/audio" />
     <remap from="~output" to="nl_command_parsed"/>
   </node>
